@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-waf
+  namespace: default
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      bb: web
+  template:
+    metadata:
+      labels:
+        bb: web
+    spec:
+      containers:
+      - name: nginx-waf
+        image: apilityio/nginx-waf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-waf
+  namespace: default
+spec:
+  type: LoadBalancer
+  selector:
+    bb: web
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
